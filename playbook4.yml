@@ -1,0 +1,15 @@
+---
+- name: fectch file from node1 
+  hosts: 172.31.7.169         ## node1 private ip address 
+  tasks: 
+    - name: fetch the file 
+      fetch:
+        src: file100
+        dest: /tmp 
+- name: copy file controller to node2
+  hosts: 172.31.3.151           ## node2 private ip address  
+  tasks:
+    - name: copy file 
+      copy: 
+        src: /tmp/172.31.7.169/file100
+        dest: /tmp

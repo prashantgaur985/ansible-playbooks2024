@@ -1,0 +1,13 @@
+---
+- name: Implementing play scope variables 
+  hosts: 172.31.7.169    ## instead of all we can use specific node also 
+  vars:
+    - a: tomcat10
+    - b: present
+    - c: yes
+  tasks:
+    - name: Install s/w
+      apt:
+        name: "{{a}}"
+        state: "{{b}}"
+        update_cache: "{{c}}" 

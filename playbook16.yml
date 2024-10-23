@@ -1,0 +1,19 @@
+---
+- name: Implementing handlers 
+  hosts: webserver
+  tasks:
+    - name: Install apache2
+      apt:
+        name: apache2 
+        state: present 
+        update_cache: yes
+    - name: Edit the index.html file 
+      copy:
+        content: "Welcome to DevopsClass"
+        dest: /var/www/html/index.html
+      notify: Restart apache2 
+  handlers:
+      - name: Restart apache2 
+        service: 
+           name: apache2 
+           state: restarted 

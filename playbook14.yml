@@ -1,0 +1,21 @@
+---
+- name: Create users and copy files into users homedirs
+  hosts: webserver
+  tasks:
+    - name: create users  
+      user:
+        name: "{{item.a}}"
+        password: "{{item.b}}"
+        home: "{{item.c}}" 
+      with_items:
+        - {a: ravi,b: redhat,c: /home/ravi}
+        - {a: a1,b: redhat,c: /tmp/a1} 
+    - name: Copy files into users homedirs
+      copy:
+         src: "{{item.a}}"
+         dest: "{{item.b}}"
+      with_items:
+          - {a: /etc/passwd,b: /home/ravi}
+          - {a: /etc/group,b: /tmp/a1}
+...
+

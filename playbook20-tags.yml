@@ -1,0 +1,24 @@
+---
+- name: Implementing Tags 
+  hosts: webserver 
+  gather_facts: false 
+  become: yes
+  tasks:
+    - name: Install tree 
+      apt:
+        name: tree
+        state: present 
+        update_cache: yes
+      tags: tree_installation 
+
+    - name: Create user 
+      user:
+         name: sara 
+         password: redhat 
+         uid: 2345
+      tags: user_creation
+
+    - name: Copy the passwd file 
+      copy:
+          src: /etc/passwd
+          dest: /tmp 

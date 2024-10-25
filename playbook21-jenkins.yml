@@ -1,0 +1,46 @@
+---
+- name: Install jenkins and required s/w 
+  hosts: jenkinsserver
+  gather_facts: false 
+  become: yes   
+  tasks:
+    - name: Install java git maven 
+      apt:
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items: 
+           - {a: openjdk-11-jdk,b: present,c: yes}
+           - {a: git,b: present,c: no}
+           - {a: maven,b: present,c: no}
+    - name: Download jenkins.war 
+      get_url: 
+          url: https://get.jenkins.io/war-stable/2.462.3/jenkins.war
+          dest: /home/ubuntu
+
+- name: install tomcat10 and required s/w
+  hosts: jenserver
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: install tomcat10 and tomcat10-admin
+      apt: 
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items:
+        - {a: tomcat10,b: present,c: yes}
+        - {a: tomcat10-admin,b: present,c: no}
+    - name: copy tomcat-users.xml file 
+      copy:
+        src: tomcat-users.xml 
+        dest: /etc/tomcat10
+      notify: Restart tomcat10
+  handlers:
+      - name: Restart tomcat10
+        service:
+          name: tomcat10
+          state: restarted 
+...
+
+    

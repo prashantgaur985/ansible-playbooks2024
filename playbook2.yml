@@ -1,6 +1,6 @@
 ---
 - name: configuring apache2 
-  hosts: all 
+  hosts: web 
   tasks: 
      - name: install apache2 
        apt: 
@@ -17,10 +17,10 @@
          state: restarted 
      - name: Check apache response on node1 
        uri: 
-         url: http://3.111.52.72
+         url: http://43.204.100.237
          status_code: 200  
      - name: Check apache response on node2
        uri: 
-         url: http://13.235.77.94
+         url: http://15.207.71.169
          status_code: 200 
 ... 

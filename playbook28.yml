@@ -1,0 +1,39 @@
+---
+- name: Configure apache2 on ubuntu and httpd on RedHat 
+  hosts: web 
+  tasks:
+    - name: Install apache2 on Ubuntu
+      apt:
+        name: apache2 
+        state: present 
+        update_cache: yes 
+      when: ansible_distribution == "Ubuntu" 
+    - name: Install httpd on RedHat
+      yum: 
+        name: httpd 
+        state: present 
+        update_cache: yes 
+      when: ansible_distribution == "RedHat" 
+    - name: Edit the index.html file 
+      copy:
+        content: "KernelIT for Devops and Cloud Courses"
+        dest: /var/www/html/index.html
+    - name: Restart apache2 
+      service: 
+        name: apache2
+        state: restarted 
+      when: ansible_distribution == "Ubuntu" 
+
+    - name: Restart httpd 
+      service: 
+        name: httpd
+        state: restarted 
+      when: ansible_distribution == "RedHat"
+    - name: Check response pf apache/httpd on all servers 
+      uri:
+        url: "{{item}}" 
+        status_code: 200
+      with_items:
+        - http://172.31.12.173
+        - http://172.31.7.169
+        - http://172.31.12.191

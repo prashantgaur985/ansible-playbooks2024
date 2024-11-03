@@ -1,6 +1,6 @@
 ---
 - name: configuring Tomcat10 
-  hosts: all 
+  hosts: web 
   tasks:
     - name: install tomcat10 
       apt:
@@ -30,10 +30,10 @@
         minutes: 1
     - name: check tomcat on node1 
       uri:
-        url: http://13.233.137.75:9090
+        url: http://43.204.100.237:9090
         status_code: 200   
     - name: check tomcat on node2
       uri:
-        url: http://65.0.75.174:9090
+        url: http://15.207.71.169:9090
         status_code: 200   
 ...

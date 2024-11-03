@@ -1,0 +1,82 @@
+---
+- name: Install required s/w on Devserver
+  hosts: devserver
+  gather_facts: false 
+  tasks:  
+
+     - name: Install necessary s/w's on devservere
+       apt: 
+         name: "{{item.a}}"
+         state: "{{item.b}}"
+         update_cache: "{{item.c}}"
+       with_items:
+           - {a: openjdk-11-jdk,b: present,c: yes}
+           - {a: git,b: present,c: no}
+           - {a: maven,b: present,c: no}
+
+- name: Install necessary s/w's qaserver
+  hosts: qaserver
+  gather_facts: false
+  tasks:
+    - name: install required s/w
+      apt: 
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items:
+         - {a: openjdk-11-jdk,b: present,c: yes}
+         - {a: git,b: present,c: no}
+         - {a: tomcat10,b: present,c: no}
+         - {a: tomcat10-admin,b: present,c: no}
+
+- name: Install necessary s/w's prodserver
+  hosts: prodserver
+  gather_facts: false
+  tasks:
+    - name: install required s/w
+      apt: 
+         name: "{{item.a}}"
+         state: "{{item.b}}"
+         update_cache: "{{item.c}}"
+      with_items:
+         - {a: tomcat10,b: present,c: yes}
+         - {a: tomcat10-admin,b: present,c: no}
+
+- name: Continuos Download and Continuos Build 
+  hosts: devserver 
+  gather_facts: false 
+  tasks:
+    - name: download the dev code from github 
+      git:
+         repo: https://github.com/prashantgaur985/maven.git
+         dest: dev-git
+    - name: Create artifacts from the above code 
+      shell: cd dev-git;mvn package
+    - name: Fetch the artifact webapp.war from devserver to controller 
+      fetch:
+         src: dev-git/webapp/target/webapp.war
+         dest: /tmp
+
+- name: Continuos Deployment and Continuos Testing 
+  hosts: qaserver 
+  gather_facts: false 
+  tasks:
+    - name: Deploy artifact into tomcat on qaserver 
+      copy: 
+         src: /tmp/172.31.1.145/dev-git/webapp/target/webapp.war
+         dest: /var/lib/tomcat10/webapps/testapp.war
+    - name: Download the selenium scripts 
+      git:
+        repo: https://github.com/prashantgaur985/FunctionalTesting.git 
+        dest: test-git
+    - name: Execute the selenium scripts 
+      shell: java -jar test-git/testing.jar
+
+- name: Continuos Delivery 
+  hosts: prodserver 
+  gather_facts: false 
+  tasks:
+    - name: Deploy artifact into tomcat on prodserver
+      copy:
+        src: /tmp/172.31.1.145/dev-git/webapp/target/webapp.war
+        dest: /var/lib/tomcat10/webapps/prodapp.war 

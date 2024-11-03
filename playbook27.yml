@@ -1,0 +1,16 @@
+---
+- name: Install git on all servers 
+  hosts: web 
+  tasks:
+    - name: Install git on ubuntu servers 
+      apt:
+        name: git 
+        state: present 
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+    - name: Install git on RedHat servers 
+      yum:
+        name: git 
+        state: present 
+        update_cache: yes
+      when: ansible_distribution == "RedHat"

@@ -1,0 +1,12 @@
+---
+- name: copy a file using when condition 
+  hosts: all 
+  vars: 
+    - a: 10 
+  tasks:
+    - name: copy passwd file
+      copy:
+        src: /etc/passwd 
+        dest: /tmp 
+      when: a==10
+   

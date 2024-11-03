@@ -1,0 +1,7 @@
+---
+- name: call child playbook 
+  hosts: web 
+  tasks:
+    - name: call child playbook 
+      import_tasks: playbook24-child.yml
+... 

@@ -1,6 +1,6 @@
 ---
 - name: install tree using host scope variable
-  hosts: servers
+  hosts: 172.31.12.173
   tasks:
     - name: install tree
       apt:

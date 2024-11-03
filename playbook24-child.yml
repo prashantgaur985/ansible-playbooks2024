@@ -1,0 +1,6 @@
+---
+- name: create user sara1 
+  user:
+    name: sara1 
+    state: present
+...

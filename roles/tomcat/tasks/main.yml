@@ -1,0 +1,15 @@
+---
+# tasks file for tomcat
+#- include_tasks: install.yml
+#- include_tasks: configure.yml
+#- include_tasks: restart.yml
+# we can do like above or we can do like below code 
+#
+- name: Call child playbooks for tomcat 
+  include_tasks: "{{item}}"
+  with_items:
+    - install.yml
+    - configure.yml
+    - restart.yml
+... 
+
